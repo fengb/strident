@@ -1,9 +1,14 @@
 (load "eval.ss")
 
-(define (@repl)
-  (display "strident> ")
-  (display (@eval (read)))
-  (newline)
-  (@repl))
+; (@eval @env '(expr)) -> (@env . val)
 
-(@repl)
+(define (@repl-process eval-pair)
+  (display (@cdr eval-pair))
+  (newline)
+  (@repl (@car eval-pair)))
+
+(define (@repl @env)
+  (display "strident> ")
+  (@repl-process (@eval-mod @env (read))))
+
+(@repl @env-default)

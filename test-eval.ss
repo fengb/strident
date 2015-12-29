@@ -1,13 +1,16 @@
 (load "support.ss")
 
-(assert '(eq? @t (@eval #t)))
-(assert '(eq? @f (@eval #f)))
+(define (@eval-default expr)
+  (@eval @env-default expr))
 
-(assert '(eq? @eol (@eval '(quote ()))))
-(assert '(eq? @t (@eval '(quote #t))))
-(assert '(equal? '(#t) (@eval '(quote (#t)))))
+(assert '(eq? @t (@eval-default #t)))
+(assert '(eq? @f (@eval-default #f)))
 
-(assert '(eq? @t (@eval '(car '(#t)))))
-(assert '(eq? @eol (@eval '(cdr '(#t)))))
+(assert '(eq? @eol (@eval-default '(quote ()))))
+(assert '(eq? @t (@eval-default '(quote #t))))
+(assert '(equal? '(#t) (@eval-default '(quote (#t)))))
 
-(assert '(equal? '(#t . #f) (@eval '(cons #t #f))))
+(assert '(eq? @t (@eval-default '(car '(#t)))))
+(assert '(eq? @eol (@eval-default '(cdr '(#t)))))
+
+(assert '(equal? '(#t . #f) (@eval-default '(cons #t #f))))

@@ -42,7 +42,7 @@
 ;    ((@empty? args) @eol)
 ;    (@else (@cons (@car args) (@apply @list (@cdr args))))))
 
-(define @env
+(define @env-default
   (@list
     (@cons 'car @car)
     (@cons 'cdr @cdr)
@@ -69,15 +69,26 @@
     ((@eq? key (@caar assoc-list)) (@cdar assoc-list))
     (@else (@assoc-get (@cdr assoc-list) key))))
 
-(define (@eval expr)
+(define (@eval-mod env expr)
+  (@cons env (@eval env expr)))
+
+(define (@eval env expr)
   (cond
-    ((@pair? expr) (@eval-pair (@car expr) (@cdr expr)))
+    ((@pair? expr)
+       (@eval-pair env (@car expr) (@cdr expr)))
     (@else expr)))
 
-(define (@eval-pair head tail)
+(define (@eval-many env exprs)
+  (cond
+    ((@empty? exprs) @eol)
+    (@else
+      (@cons (@eval env (@car exprs))
+             (@eval-many env (@cdr exprs))))))
+
+(define (@eval-pair env head tail)
   (cond
     ((@eq? head 'quote) (@car tail))
-    ((@assoc-has? @env head)
-       (@apply (@assoc-get @env head) (@map @eval tail)))
+    ((@assoc-has? env head)
+       (@apply (@assoc-get env head) (@eval-many env tail)))
     (@else (display "FAIL"))
     ))
