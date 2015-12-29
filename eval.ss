@@ -33,11 +33,6 @@
 (define (@empty? val)
   (@eq? @eol val))
 
-(define (@map func list)
-  (cond
-    ((@empty? list) @eol)
-    (@else (@cons (func (car list)) (@map func (cdr list))))))
-
 (define (@list . args) args)
 
 ;(define (@list . args)
@@ -101,8 +96,6 @@
     ((@eq? 'define (@car expr)) @t)
     (@else @f)))
 
-;(define varname expr)
-
 (define (@mod env expr)
   (@cons
     (@assoc-put env (@cadr expr) (@eval env (@caddr expr)))
@@ -124,6 +117,8 @@
 (define (@eval-pair env head tail)
   (cond
     ((@eq? head 'quote) (@car tail))
+    ; FIXME: convert (env) to be in env
+    ((@eq? head 'env) env)
     ((@assoc-has? env head)
        (@apply (@assoc-get env head) (@eval-many env tail)))
     (@else (display "FAIL"))
