@@ -20,6 +20,7 @@
 
 (define @t (@eq? @eol @eol))
 (define @f (@eq? @eol @t))
+(define @else @t)
 
 (define (@not val)
   (cond
@@ -32,10 +33,17 @@
 (define (@map func list)
   (cond
     ((@empty? list) '())
-    (@t (@cons (func (car list)) (@map func (cdr list))))))
+    (@else (@cons (func (car list)) (@map func (cdr list))))))
+
+(define (@list . args) args)
+
+;(define (@list . args)
+;  (cond
+;    ((@empty? args) @eol)
+;    (@else (@cons (@car args) (@apply @list (@cdr args))))))
 
 (define @env
-  (list
+  (@list
     (@cons 'car @car)
     (@cons 'cdr @cdr)
     (@cons 'cons @cons)))
@@ -50,23 +58,23 @@
   (cond
     ((@empty? assoc-list) @f)
     ((@eq? key (@caar assoc-list)) @t)
-    (@t (@assoc-has? (@cdr assoc-list) key))))
+    (@else (@assoc-has? (@cdr assoc-list) key))))
 
 (define (@assoc-get assoc-list key)
   (cond
     ((@empty? assoc-list) @f)
     ((@eq? key (@caar assoc-list)) (@cdar assoc-list))
-    (@t (@assoc-get (@cdr assoc-list) key))))
+    (@else (@assoc-get (@cdr assoc-list) key))))
 
 (define (@eval expr)
   (cond
     ((@pair? expr) (@eval-pair (@car expr) (@cdr expr)))
-    (@t expr)))
+    (@else expr)))
 
 (define (@eval-pair head tail)
   (cond
     ((@eq? head 'quote) (@car tail))
     ((@assoc-has? @env head)
        (@apply (@assoc-get @env head) (@map @eval tail)))
-    (@t (display "FAIL"))
+    (@else (display "FAIL"))
     ))

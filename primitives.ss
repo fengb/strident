@@ -9,3 +9,6 @@
 
 (assert '(eq? '() (@map @car '())))
 (assert '(equal? '(#f #t) (@map @car '((#f) (#t)))))
+
+(assert '(eq? '() (@list)))
+(assert '(equal? '(1 2 3) (@list 1 2 3)))
