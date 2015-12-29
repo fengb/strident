@@ -46,7 +46,10 @@
   (@list
     (@cons 'car @car)
     (@cons 'cdr @cdr)
-    (@cons 'cons @cons)))
+    (@cons 'cons @cons)
+    (@cons 'eq? @eq?)
+    (@cons 'pair? @pair?)
+    (@cons 'apply @apply)))
 
 (define (@caar list)
   (@car (@car list)))
