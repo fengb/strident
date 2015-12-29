@@ -49,7 +49,10 @@
     (@cons 'cons @cons)
     (@cons 'eq? @eq?)
     (@cons 'pair? @pair?)
-    (@cons 'apply @apply)))
+    (@cons 'apply @apply)
+    (@cons #t @t)
+    (@cons #f @f)
+    (@cons '() @eol)))
 
 (define (@caar list)
   (@car (@car list)))
@@ -69,6 +72,8 @@
     ((@eq? key (@caar assoc-list)) (@cdar assoc-list))
     (@else (@assoc-get (@cdr assoc-list) key))))
 
+; @eval -------
+
 (define (@eval-mod env expr)
   (@cons env (@eval env expr)))
 
@@ -76,7 +81,7 @@
   (cond
     ((@pair? expr)
        (@eval-pair env (@car expr) (@cdr expr)))
-    (@else expr)))
+    (@else (@assoc-get env expr))))
 
 (define (@eval-many env exprs)
   (cond
