@@ -1,5 +1,3 @@
-(load "eval.ss")
-
 (define (display-all . args)
   (for-each display args))
 

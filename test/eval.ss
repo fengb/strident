@@ -1,4 +1,5 @@
-(load "support.ss")
+(load "test/support.ss")
+(load "eval.ss")
 
 (define (@eval-default expr)
   (@eval @env-default expr))
