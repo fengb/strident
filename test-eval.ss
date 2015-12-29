@@ -10,4 +10,4 @@
 (assert '(eq? @t (@eval '(car '(#t)))))
 (assert '(eq? @eol (@eval '(cdr '(#t)))))
 
-;(assert '(eq? '(@t . @f) (@eval '(cons #t #f))))
+(assert '(equal? '(#t . #f) (@eval '(cons #t #f))))

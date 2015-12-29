@@ -6,3 +6,6 @@
 (assert '(eq? @f (@not @t)))
 (assert '(eq? @t (@not @f)))
 (assert '(eq? @f (@not @eol)))
+
+(assert '(eq? '() (@map @car '())))
+(assert '(equal? '(#f #t) (@map @car '((#f) (#t)))))
