@@ -25,14 +25,17 @@
 (define (@not val)
   (cond
     (val @f)
-    (@t @t)))
+    (@else @t)))
+
+(define (@atom? val)
+  (@not (@pair? val)))
 
 (define (@empty? val)
   (@eq? @eol val))
 
 (define (@map func list)
   (cond
-    ((@empty? list) '())
+    ((@empty? list) @eol)
     (@else (@cons (func (car list)) (@map func (cdr list))))))
 
 (define (@list . args) args)
@@ -60,6 +63,15 @@
 (define (@cdar list)
   (@cdr (@car list)))
 
+(define (@cadr list)
+  (@car (@cdr list)))
+
+(define (@cddr list)
+  (@cdr (@cdr list)))
+
+(define (@caddr list)
+  (@car (@cddr list)))
+
 (define (@assoc-has? assoc-list key)
   (cond
     ((@empty? assoc-list) @f)
@@ -72,10 +84,29 @@
     ((@eq? key (@caar assoc-list)) (@cdar assoc-list))
     (@else (@assoc-get (@cdr assoc-list) key))))
 
+(define (@assoc-put assoc-list key value)
+  (@cons (@cons key value) assoc-list))
+
 ; @eval -------
 
+;'(define a b)
 (define (@eval-mod env expr)
-  (@cons env (@eval env expr)))
+  (cond
+    ((@mod? expr) (@mod env expr))
+    (@else (@cons env (@eval env expr)))))
+
+(define (@mod? expr)
+  (cond
+    ((@atom? expr) @f)
+    ((@eq? 'define (@car expr)) @t)
+    (@else @f)))
+
+;(define varname expr)
+
+(define (@mod env expr)
+  (@cons
+    (@assoc-put env (@cadr expr) (@eval env (@caddr expr)))
+    (@cadr expr)))
 
 (define (@eval env expr)
   (cond
